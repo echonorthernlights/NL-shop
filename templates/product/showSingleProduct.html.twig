@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NLshop - product{% endblock %}
+
+
+
+{% block content %}
+<h1>Our products</h1>
+<div class="row product-container">
+    <div class="col-md-5">
+        <div class="product-item text-center">
+            <img src="/uploads/products/{{product.image}}" alt="{{product.name}}" class="img-fluid"/>
+        </div>
+    </div>
+    <div class="col-md-7 my-auto">
+            <h3>{{product.name}}</h3>
+            <p>{{product.subtitle}}</p>
+            <span class="product-page-price">{{(product.price / 100)|number_format(2)}} $</span>
+            <hr>
+            <p>{{product.description}}</p>
+            <a href="{{path('cart_add', {id : product.id})}}" class="btn btn-primary">Add to cart</a>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

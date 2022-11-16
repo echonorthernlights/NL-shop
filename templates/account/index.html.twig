@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NLshop - Account{% endblock %}
+
+{% block content %}
+<h1>My Account</h1>
+Welcome {{ app.user.firstname }} to your account
+<hr/>
+- <a href="{{path('account_password')}}">Change password</a>
+-Update shipment address
+-List orders
+<hr/>
+{% endblock %}
