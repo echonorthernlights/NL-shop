@@ -51,3 +51,24 @@ body {
     height: 20px;
     padding-left: 20px;
 }
+
+.small-block {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-check {
+    background-color: #f4f8ff;
+    padding: 20px 60px;
+    margin-top: 5px;
+}
+
+.col-form-label {
+    font-weight: bold;
+}
+
+.order-summary {
+    background-color: #f4f8ff;
+    padding: 20px;
+    margin-top: 22px;
+}

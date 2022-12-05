@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block javascript %}
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block title %}NLshop - Order{% endblock %}
+
+{% block content %}
+<h1>Order summary</h1>
+<p>Verify your order</p>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+    <p><b>Your delivery address</b></p>
+ 
+    <div class="form-check mt-4">
+     {{delivery|raw}}
+    </div>
+   
+    <hr>
+    <p><b>Your carrier</b></p>
+    <div class="form-check">
+     {{carrier|replace({'[br]':'<br/>'})|raw}}
+    </div>
+   
+    </div>
+    <div class="col-md-6">
+    <div class="text-center">
+        <b>Order details</b> <small>Your order summary</small>
+        
+    </div>
+    
+        <div class="order-summary">
+        {% set total = null %}
+        {% for key,item in cart %}
+            <div class="row {% if key > 0 %}mt-3{% endif %} ">
+                <div class="col-md-2">
+                    <img src="/uploads/products/{{item.product.image}}" alt="{{item.product.name}}" height="40px"/>
+                </div>
+                <div class="col-md-5 my-auto">
+                {{item.product.name}}<br><small>{{item.product.subtitle}}</small>
+                </div>
+                <div class="col-md-2 my-auto">
+                X {{item.quantity}}
+                </div>
+                <div class="col-md-3 my-auto">
+                {{(item.product.price / 100)|number_format(2)}} $
+                </div>
+                {# <div class="col-md-2 my-auto">
+                    {{((item.product.price * item.quantity)/100)|number_format(2)}} $ 
+                </div> #}
+        </div>
+        {% set total = total + (item.product.price * item.quantity) %}
+        {% endfor %}
+        </div>
+          <hr>
+        <div class="row">
+            <div class="col-md-12">
+            <p>Subtotal :  {{(total /100)|number_format(2)}} $ </p>
+            <p>Delviery cost :  {{carrier.price}} $ </p>
+          <hr>
+             <p>Total :  {{((total /100) + carrier.price )|number_format(2)}} $ </p>
+         </div>
+        </div>
+        <div class="row">
+            <div class="col">
+         <div class="mt-3">
+            <a id="checkout-btn" class="btn btn-success btn-block" >Proceed to payment | {{((total /100) + carrier.price )|number_format(2)}} $</a>
+        </div>
+        </div>
+        </div>
+         
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript">
+// This is your test publishable API key.
+const stripe = Stripe("pk_test_51IBJKTE4dQvsxQNDBbxWeGLj3otfk6rXdiBHMIU3pJcsRpleSlvoEXRvPVrfqsKTmQHvxAmEg2fGtaOuv7ICav2L00XM4LoUuS");
+document
+  .getElementById("checkout-btn")
+  .addEventListener("click", handleClick);
+
+
+// Fetches a payment intent and captures the client secret
+async function initialize() {
+  await fetch("/create-session/{{ref}}", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    //body: JSON.stringify({ items }),
+  }).then((r) => r.json()).then((session) =>  {
+    if(session.error === "order"){
+      window.location.replace('{{path('order')}}')
+    }else{
+      return  stripe.redirectToCheckout({sessionId : session.id})
+    }
+   
+    })
+
+}
+
+
+
+async function handleClick() {
+  initialize();
+}
+</script>
+{% endblock %}

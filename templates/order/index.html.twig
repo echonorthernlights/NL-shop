@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NLshop - Order{% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+<p>Choose your preferences</p>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+
+        {% set formHtml %}
+            {{form_start(form, {action: path('order_summary')} )}}
+                {{form_label(form.addresses, 'Choose your address')}}
+                <a href="{{path('account_new_address')}}">Add new one</a>
+            {{form_end(form)}}
+        {% endset %}
+        
+        {{formHtml|replace({'[br]':'<br/>'})|raw}}
+       
+    </div>
+    <div class="col-md-6">
+    <div class="text-center">
+        <b>Order details</b>
+        <p>Your order summary</p>
+    </div>
+    
+        <div class="order-summary">
+        {% set total = null %}
+        {% for key,item in cart %}
+            <div class="row {% if key > 0 %}mt-3{% endif %} ">
+                <div class="col-md-2">
+                    <img src="/uploads/products/{{item.product.image}}" alt="{{item.product.name}}" height="40px"/>
+                </div>
+                <div class="col-md-5 my-auto">
+                {{item.product.name}}<br><small>{{item.product.subtitle}}</small>
+                </div>
+                <div class="col-md-2 my-auto">
+                X {{item.quantity}}
+                </div>
+                <div class="col-md-3 my-auto">
+                {{(item.product.price / 100)|number_format(2)}} $
+                </div>
+                {# <div class="col-md-2 my-auto">
+                    {{((item.product.price * item.quantity)/100)|number_format(2)}} $ 
+                </div> #}
+        </div>
+         {% set total = total + (item.product.price * item.quantity) %}
+        {% endfor %}
+        </div>
+        
+         <hr>
+         <div class="float-right">
+            <p>Product :  {{ cart|length}}</p>
+            <p>Total :  {{(total /100)|number_format(2)}} $ </p>
+         </div>
+    </div>
+</div>
+{% endblock %}

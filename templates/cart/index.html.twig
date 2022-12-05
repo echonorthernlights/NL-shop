@@ -23,7 +23,7 @@
   {%for item in cart %}
     <tr>
       <th scope="row"><img src="/uploads/products/{{item.product.image}}" alt="{{item.product.name}}" height="50px"/></th>
-      <td><b>{{item.product.name}}</b></td>
+      <td><b>{{item.product.name}}</b><br><small>{{item.product.subtitle}}</small></td>
       <td>
         <a href="{{ path('cart_decrease_quantity', {id : item.product.id}) }}">
             <img src="{{asset('assets/img/minus.png')}}" alt="minus" height="15px"/>
@@ -49,7 +49,7 @@
 <div class="text-right mb-5">
     <p><b>Number of products </b> : {{ cart|length }}</p>
     <p><b>Total (HT) </b> : {{(total/100)|number_format(2)}} $</p>
-    <button class="btn btn-success btn-block mt-3">Proceed to checkout</button>
+    <a href="{{path('order')}}" class="btn btn-success btn-block mt-3">Proceed to checkout</a>
 </div>
 {% else %}
     <p><b>Empty Cart</b></p>
